@@ -77,21 +77,6 @@ function bgjs(id, scale) {
 		}
 	}
 	
-	function drawField(type, y, yHeight) {
-		for (var i = 0; i < 6 ;i += 1) {
-			var x = border + (i * 2 * line + type * line);
-			//Add the bar
-			if (i > 2) {
-				x += line * 2;
-			}
-			ctx.fillStyle = colors.field[type];
-			ctx.beginPath();
-			ctx.moveTo(x, y);
-			ctx.lineTo(x + border, yHeight);
-			ctx.lineTo(x + line, y);
-			ctx.fill();
-		}
-	}
-	
 	drawBoard();
+	
 }
