@@ -1,5 +1,7 @@
+/*global document */
 function bgjs(id, scale) {
-	var canvas, ctx, line, border, width, height, background, colors;
+	var init, drawBoard, drawFields,//Private Functions
+	canvas, ctx, line, border, width, height, colors; //Properties
 	
 	init(id, scale);
 	
@@ -10,14 +12,16 @@ function bgjs(id, scale) {
 		checker: ['black', 'white'],
 		dice: 'green',
 		text: 'white'
-	}
+	};
 	
-	function init(id, scale) {
+	init = function (id, scale) {
 		canvas = document.getElementById(id);
 		ctx = canvas.getContext('2d');
 		
 		if  ('undefined' === typeof(scale)) {
-			scale = 24;
+			//Should to be %3 and %4
+			//Good sizes: 12 24 36 48 60
+			scale = 36;
 		}
 		
 		line = scale;
@@ -26,9 +30,9 @@ function bgjs(id, scale) {
 		height = line * 12;
 		canvas.width = width;
 		canvas.height = height;
-	}
+	};
 	
-	function drawBoard() {
+	drawBoard = function () {
 		//Border
 		ctx.fillStyle = colors.border;
 		ctx.fillRect(0, 0, width, height);
@@ -43,15 +47,15 @@ function bgjs(id, scale) {
 		
 		//Fields
 		drawFields();
-	}
+	};
 	
-	function drawFields() {
-		var lineHeight = 5 * line;
-		for (var i = 0; i < 12 ;i += 1) {
-			var x, y, type, yHeight;
+	drawFields = function () {
+		var lineHeight, i, x, y, type, yHeight;
+		lineHeight = 5 * line;
+		for (i = 0; i < 12 ;i += 1) {
 			type = i % 2;
 			x = border + (i * line);
-			if (5 <i ) {
+			if (5 < i) {
 				x += 2 * line; //Add the bar
 			}
 			
@@ -75,7 +79,7 @@ function bgjs(id, scale) {
 			ctx.lineTo(x + line, y);
 			ctx.fill();
 		}
-	}
+	};
 	
 	drawBoard();
 	
