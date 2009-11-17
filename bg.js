@@ -3,8 +3,6 @@ function bgjs(id, scale) {
 	var init, drawBoard, drawFields,//Private Functions
 	canvas, ctx, line, border, width, height, colors; //Properties
 	
-	init(id, scale);
-	
 	colors = {
 		background: 'grey',
 		border: 'black',
@@ -81,6 +79,7 @@ function bgjs(id, scale) {
 		}
 	};
 	
+	init(id, scale);
 	drawBoard();
 	
 }
