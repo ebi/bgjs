@@ -4,15 +4,19 @@
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 		<title>bg-js example</title>
 		<!--[if IE]><script type="text/javascript" src="excanvas-min.js"></script><![endif]-->
-		<script src="bg.js"></script>
+		<script type="text/javascript" src="bg.js"></script>
+		<script type="text/javascript">
+		    function doBgjsInstance() {
+		        new bgjs('bgboard');
+		    }
+		</script>
 		<style type="css">
 			canvas {
 				border: 3px solid green;
 			}
 		</style>
 	</head>
-	<body>
+	<body onload="doBgjsInstance()">
 		<canvas id="bgboard" width="50" height="50">You need canvas enabled browser…</canvas>
-		<script>new bgjs('bgboard');</script>
 	</body>
 </html>
