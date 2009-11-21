@@ -2,10 +2,12 @@
 function bgjs(id, scale) {
 	var init, drawBoard, drawFields,//Private Functions
 	field, //Objects
-	canvas, ctx, line, border, width, height, colors, fields = []; //Properties
+	that, canvas, ctx, line, border, width, height, colors, fields = []; //Properties
+	
+	that = this;
 	
 	colors = {
-		background: 'grey',
+		background: 'lightblue',
 		border: 'black',
 		field: ['darkred', 'green'],
 		checker: [
@@ -32,9 +34,12 @@ function bgjs(id, scale) {
 		height = line * 12;
 		canvas.width = width;
 		canvas.height = height;
+		that.drawBoard();
 	};
 	
-	drawBoard = function () {
+	this.drawBoard = function () {
+		ctx.clearRect(0, 0, width, height);
+		
 		//Border
 		ctx.fillStyle = colors.border;
 		ctx.fillRect(0, 0, width, height);
@@ -47,7 +52,7 @@ function bgjs(id, scale) {
 		ctx.fillStyle = colors.border;
 		ctx.fillRect(line * 6.5, border, line * 2, height - line);
 		
-		//Fields
+		//Fields & Checkers
 		drawFields();
 	};
 	
@@ -61,21 +66,31 @@ function bgjs(id, scale) {
 				x += 2 * line; //Add the bar
 			}
 			
+			//TODO: Extract field drawing to function
+			
 			//Top Field
 			y = border;
 			yHeight = lineHeight;
-			fields[i] = new field(x, y, i);
 			ctx.fillStyle = colors.field[type];
 			ctx.beginPath();
 			ctx.moveTo(x, y);
 			ctx.lineTo(x + border, yHeight);
 			ctx.lineTo(x + line, y);
 			ctx.fill();
+			if ('undefined' === typeof(fields[i])) {
+				fields[i] = new field(that, x, y, i, 0);
+			} else {
+				fields[i].drawCheckers();
+			}
 			
 			//Bottom Field
 			y = height - border;
 			yHeight = height - lineHeight;
-			fields[i + 12] = new field(x, y, i + 12);
+			if ('undefined' === typeof(fields[i + 12])) {
+				fields[i + 12] = new field(that, x, y, i + 12, 0);
+			} else {
+				fields[i + 12].drawCheckers();
+			}
 			ctx.fillStyle = colors.field[!type + 0];
 			ctx.beginPath();
 			ctx.moveTo(x, y);
@@ -85,26 +100,46 @@ function bgjs(id, scale) {
 		}
 	};
 	
-	field = function(posX, posY, number) {
-		var fieldX, fieldY, position = number, place, checkers = 0;
+	field = function(boardRef, posX, posY, number, type) {
+		var that, board, fieldX, fieldY, position = number, place, checkers = 0, color;
+		that = this;
+		board = boardRef;
+		color = colors.checker[type];
 		place = (number < 12) ? 1 : -1;
 		fieldX = posX + place * line / 2;
 		fieldY = posY + place * line / 2;
 		
 		this.addChecker = function (type) {
+			if (color !== colors.checker[type]) {
+				color = colors.checker[type];
+				checkers += 1;
+				this.drawCheckers();
+			} else {
+				this.drawChecker(checkers)
+				checkers += 1;
+			}
+			return checkers;
+		};
+		
+		this.drawCheckers = function () {
+			for (var i = 0; i < checkers; i += 1) {
+				this.drawChecker(i);
+			}
+		};
+		
+		this.drawChecker = function (num) {
 			var checkerX, checkerY, pos;
 			checkerX = fieldX;
-			checkerY = fieldY + place * checkers * line;
+			checkerY = fieldY + place * num * line;
 			
-			ctx.strokeStyle = colors.checker[type].border;
-			ctx.fillStyle = colors.checker[type].fill;
+			ctx.strokeStyle = color.border;
+			ctx.fillStyle = color.fill;
 			
 			ctx.beginPath();
 			ctx.arc(checkerX, checkerY, border - 1 , 0, Math.PI * 2, true);
 			ctx.fill();
 			ctx.stroke();
 			
-			checkers += 1;
 			return checkers;
 		}
 		
@@ -112,8 +147,8 @@ function bgjs(id, scale) {
 			if (0 === checkers) {
 				return 0;
 			}
-			
 			checkers -= 1;
+			board.drawBoard();
 			return checkers;
 		}
 		
@@ -127,11 +162,4 @@ function bgjs(id, scale) {
 	}
 	
 	init(id, scale);
-	drawBoard();
-	fields[0].addChecker(0);
-	fields[1].addChecker(1);
-	fields[1].addChecker(1);
-	fields[1].addChecker(1);
-	fields[22].addChecker(1);
-	fields[22].addChecker(1);
 }
