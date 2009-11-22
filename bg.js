@@ -1,8 +1,8 @@
 /*global document */
-function bgjs(id, scale) {
+function bgjs(id, scale, direction) {
 	var init, drawBoard, drawFields,//Private Functions
 	field, //Objects
-	that, canvas, ctx, line, border, width, height, colors, fields = []; //Properties
+	that, canvas, ctx, line, border, width, height, colors, fields = [], direction; //Properties
 	
 	that = this;
 	
@@ -26,6 +26,12 @@ function bgjs(id, scale) {
 			//Should to be %3 and %4
 			//Good sizes: 12 24 36 48 60
 			scale = 36;
+		}
+		
+		if ('undefined' === typeof(direction) || 0 === direction || 'right' === direction) {
+			direction = 0
+		} else {
+			direction = 11;
 		}
 		
 		line = scale;
@@ -60,6 +66,7 @@ function bgjs(id, scale) {
 		var lineHeight, i, x, y, type, yHeight;
 		lineHeight = 5 * line;
 		for (i = 0; i < 12 ;i += 1) {
+			var num = Math.abs(direction - i);
 			type = i % 2;
 			x = border + (i * line);
 			if (5 < i) {
@@ -67,10 +74,10 @@ function bgjs(id, scale) {
 			}
 			
 			//Top Field
-			drawField(x, border, lineHeight, colors.field[type], i);
+			drawField(x, border, lineHeight, colors.field[type], num);
 			
 			//Bottom Field
-			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], i + 12)
+			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], 23 - num)
 		}
 	};
 	
@@ -105,13 +112,20 @@ function bgjs(id, scale) {
 	};
 	
 	field = function(boardRef, posX, posY, number, type) {
-		var that, board, fieldX, fieldY, position = number, place, checkers = 0, color;
+		var that, board, fieldX, fieldY, position = number, place, checkers = 0, color, drawNumber;
 		that = this;
 		board = boardRef;
 		color = type;
 		place = (number < 12) ? 1 : -1;
 		fieldX = posX + line / 2;
 		fieldY = posY + place * line / 2;
+		
+		ctx.textAlign = 'center';
+		ctx.font = '800 ' + scale / 3 + 'px Helvetica, sans-serif'
+		ctx.fillStyle = colors.text;
+		
+		//TODO: Improve text placement
+		ctx.fillText(position + 1, fieldX, posY - (place - 1) * line / 4 - 2);
 		
 		this.getType = function () {
 			return color;
