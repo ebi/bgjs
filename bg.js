@@ -16,7 +16,10 @@ function bgjs(id, scale, dir) {
 			{border: 'black', fill: 'red', text: 'black'},
 			{border: 'black', fill: 'Lime', text: 'black'}
 		],
-		dice: 'green',
+		dice: [ //Strongly recommend you take similar color to the checkers
+			{border: 'black', fill: 'red', text: 'black'},
+			{border: 'black', fill: 'Lime', text: 'black'}
+		],
 		text: 'white'
 	};
 	
@@ -43,28 +46,6 @@ function bgjs(id, scale, dir) {
 		canvas.width = width;
 		canvas.height = height;
 		that.drawBoard();
-	};
-	
-	this.drawBoard = function () {
-		ctx.clearRect(0, 0, width, height);
-		
-		//Border
-		ctx.fillStyle = colors.border;
-		ctx.fillRect(0, 0, width, height);
-		
-		//Background
-		ctx.fillStyle = colors.background;
-		ctx.fillRect(border, border, width - line, height - line);
-		
-		//Bar
-		ctx.fillStyle = colors.border;
-		ctx.fillRect(line * 6.5, border, line * 2, height - line);
-		
-		//Fields & Checkers
-		drawFields();
-		
-		
-		drawDirectionArrow();
 	};
 	
 	drawFields = function () {
@@ -141,7 +122,29 @@ function bgjs(id, scale, dir) {
 		ctx.lineTo(0, size);
 		ctx.fill();
 		ctx.restore();
-	}
+	};
+	
+	this.drawBoard = function () {
+		ctx.clearRect(0, 0, width, height);
+		
+		//Border
+		ctx.fillStyle = colors.border;
+		ctx.fillRect(0, 0, width, height);
+		
+		//Background
+		ctx.fillStyle = colors.background;
+		ctx.fillRect(border, border, width - line, height - line);
+		
+		//Bar
+		ctx.fillStyle = colors.border;
+		ctx.fillRect(line * 6.5, border, line * 2, height - line);
+		
+		//Fields & Checkers
+		drawFields();
+		
+		
+		drawDirectionArrow();
+	};
 	
 	this.move = function (from, to, type) {
 		from -= 1;
