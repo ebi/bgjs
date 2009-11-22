@@ -206,7 +206,7 @@ function bgjs(id, scale, dir) {
 				checkerY = fieldY + place * num * line;
 			
 				ctx.beginPath();
-				ctx.arc(checkerX, checkerY, border - 1, 0, Math.PI * 2, true);
+				ctx.arc(checkerX, checkerY, border, 0, Math.PI * 2, true);
 				ctx.fill();
 				ctx.stroke();
 			} else {
