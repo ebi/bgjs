@@ -13,8 +13,8 @@ function bgjs(id, scale, dir) {
 		border: 'black',
 		field: ['darkred', 'green'],
 		checker: [
-			{border: 'black', fill: 'red'},
-			{border: 'black', fill: 'Lime'}
+			{border: 'black', fill: 'red', text: 'black'},
+			{border: 'black', fill: 'Lime', text: 'black'}
 		],
 		dice: 'green',
 		text: 'white'
@@ -167,15 +167,25 @@ function bgjs(id, scale, dir) {
 		this.drawChecker = function (num) {
 			var checkerX, checkerY, pos;
 			checkerX = fieldX;
-			checkerY = fieldY + place * num * line;
-			
 			ctx.strokeStyle = colors.checker[color].border;
 			ctx.fillStyle = colors.checker[color].fill;
 			
-			ctx.beginPath();
-			ctx.arc(checkerX, checkerY, border - 1, 0, Math.PI * 2, true);
-			ctx.fill();
-			ctx.stroke();
+			if (5 > num) {
+				checkerY = fieldY + place * num * line;
+			
+				ctx.beginPath();
+				ctx.arc(checkerX, checkerY, border - 1, 0, Math.PI * 2, true);
+				ctx.fill();
+				ctx.stroke();
+			} else {
+				//TODO: Improve text placement
+				checkerY = fieldY + place * 4 * line;
+				ctx.fillRect(checkerX - line / 3.5, checkerY - line / 3.5, line / 2, line / 2);
+				ctx.fillStyle = colors.checker[color].text;
+				ctx.textAlign = 'center';
+				ctx.font = '800 ' + scale / 2.5 + 'px Helvetica, sans-serif';
+				ctx.fillText(num, checkerX, checkerY);
+			}
 			
 			return checkers;
 		};
