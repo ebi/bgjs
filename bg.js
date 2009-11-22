@@ -1,4 +1,5 @@
 /*global document */
+bar = 'bar';
 function bgjs(id, scale, direction) {
 	var init, drawBoard, drawFields,//Private Functions
 	field, //Objects
@@ -74,14 +75,18 @@ function bgjs(id, scale, direction) {
 			}
 			
 			//Top Field
-			drawField(x, border, lineHeight, colors.field[type], num);
+			drawField(x, border, lineHeight, colors.field[type], num, 1);
 			
 			//Bottom Field
-			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], 23 - num)
+			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], 23 - num, -1)
 		}
+		
+		//Create bars
+		drawField(width / 2 - border, line, lineHeight, colors.border, 24, 1);
+		drawField(width / 2 - border, height - line, lineHeight, colors.border, 25, -1);
 	};
 	
-	drawField = function (x, y, yHeight, color, number) {
+	drawField = function (x, y, yHeight, color, number, grow) {
 		ctx.fillStyle = color;
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -89,15 +94,32 @@ function bgjs(id, scale, direction) {
 		ctx.lineTo(x + line, y);
 		ctx.fill();
 		if ('undefined' === typeof(fields[number])) {
-			fields[number] = new field(that, x, y, number, 0);
+			fields[number] = new field(that, x, y, grow, 0);
 		} else {
 			fields[number].drawCheckers();
+		}
+		
+		//Number fields
+		if (number < 24) {
+			ctx.textAlign = 'center';
+			ctx.font = '800 ' + scale / 3 + 'px Helvetica, sans-serif'
+			ctx.fillStyle = colors.text;
+			
+			//TODO: Improve text placement
+			ctx.fillText(number + 1, x + line / 2, y - (grow - 1) * line / 4 - 2);
 		}
 	}
 	
 	this.move = function (from, to, type) {
 		from -= 1;
-		to -= 1;
+		if ('bar' === to) {
+			console.log(from);
+			to = 24 + fields[from].getType();
+			type = fields[from].getType();
+			console.log(type);
+		} else {
+			to -= 1;
+		}
 		
 		if ('undefined' !== typeof(fields[from])) {
 			type = fields[from].getType();
@@ -111,21 +133,14 @@ function bgjs(id, scale, direction) {
 		}
 	};
 	
-	field = function(boardRef, posX, posY, number, type) {
-		var that, board, fieldX, fieldY, position = number, place, checkers = 0, color, drawNumber;
+	field = function(boardRef, posX, posY, grow, type) {
+		var that, board, fieldX, fieldY, place, checkers = 0, color, drawNumber;
 		that = this;
 		board = boardRef;
 		color = type;
-		place = (number < 12) ? 1 : -1;
+		place = grow;
 		fieldX = posX + line / 2;
 		fieldY = posY + place * line / 2;
-		
-		ctx.textAlign = 'center';
-		ctx.font = '800 ' + scale / 3 + 'px Helvetica, sans-serif'
-		ctx.fillStyle = colors.text;
-		
-		//TODO: Improve text placement
-		ctx.fillText(position + 1, fieldX, posY - (place - 1) * line / 4 - 2);
 		
 		this.getType = function () {
 			return color;
@@ -177,10 +192,6 @@ function bgjs(id, scale, direction) {
 		
 		this.countChecker = function () {
 			return checkers;
-		}
-		
-		this.getPosition = function () {
-			return position;
 		}
 	}
 	
