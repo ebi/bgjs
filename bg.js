@@ -331,7 +331,7 @@ function bgjs(id, scale, dir) {
 				ctx.fillStyle = colors.checker[color].text;
 				ctx.textAlign = 'center';
 				ctx.font = '800 ' + scale / 2.5 + 'px Helvetica, sans-serif';
-				ctx.fillText(num, checkerX, checkerY);
+				ctx.fillText(num + 1, checkerX, checkerY);
 			}
 			
 			return checkers;
