@@ -1,9 +1,10 @@
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true */
 /*global document */
-bar = 'bar';
-function bgjs(id, scale, direction) {
-	var init, drawBoard, drawFields,//Private Functions
-	field, //Objects
-	that, canvas, ctx, line, border, width, height, colors, fields = [], direction; //Properties
+var bar = 'bar';
+function bgjs(id, scale, dir) {
+	var init, drawField, drawFields,//Private Functions
+	Field, //Objects
+	that, canvas, ctx, line, border, width, height, colors, fields = [], direction = dir; //Properties
 	
 	that = this;
 	
@@ -30,7 +31,7 @@ function bgjs(id, scale, direction) {
 		}
 		
 		if ('undefined' === typeof(direction) || 0 === direction || 'right' === direction) {
-			direction = 0
+			direction = 0;
 		} else {
 			direction = 11;
 		}
@@ -64,10 +65,10 @@ function bgjs(id, scale, direction) {
 	};
 	
 	drawFields = function () {
-		var lineHeight, i, x, y, type, yHeight;
+		var lineHeight, i, x, y, type, yHeight, num;
 		lineHeight = 5 * line;
 		for (i = 0; i < 12 ;i += 1) {
-			var num = Math.abs(direction - i);
+			num = Math.abs(direction - i);
 			type = i % 2;
 			x = border + (i * line);
 			if (5 < i) {
@@ -78,7 +79,7 @@ function bgjs(id, scale, direction) {
 			drawField(x, border, lineHeight, colors.field[type], num, 1);
 			
 			//Bottom Field
-			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], 23 - num, -1)
+			drawField(x, height - border, height - lineHeight, colors.field[!type + 0], 23 - num, -1);
 		}
 		
 		//Create bars
@@ -94,7 +95,7 @@ function bgjs(id, scale, direction) {
 		ctx.lineTo(x + line, y);
 		ctx.fill();
 		if ('undefined' === typeof(fields[number])) {
-			fields[number] = new field(that, x, y, grow, 0);
+			fields[number] = new Field(that, x, y, grow, 0);
 		} else {
 			fields[number].drawCheckers();
 		}
@@ -102,21 +103,19 @@ function bgjs(id, scale, direction) {
 		//Number fields
 		if (number < 24) {
 			ctx.textAlign = 'center';
-			ctx.font = '800 ' + scale / 3 + 'px Helvetica, sans-serif'
+			ctx.font = '800 ' + scale / 3 + 'px Helvetica, sans-serif';
 			ctx.fillStyle = colors.text;
 			
 			//TODO: Improve text placement
 			ctx.fillText(number + 1, x + line / 2, y - (grow - 1) * line / 4 - 2);
 		}
-	}
+	};
 	
 	this.move = function (from, to, type) {
 		from -= 1;
 		if ('bar' === to) {
-			console.log(from);
 			to = 24 + fields[from].getType();
 			type = fields[from].getType();
-			console.log(type);
 		} else {
 			to -= 1;
 		}
@@ -133,8 +132,8 @@ function bgjs(id, scale, direction) {
 		}
 	};
 	
-	field = function(boardRef, posX, posY, grow, type) {
-		var that, board, fieldX, fieldY, place, checkers = 0, color, drawNumber;
+	Field = function (boardRef, posX, posY, grow, type) {
+		var that, board, fieldX, fieldY, place, checkers = 0, color;
 		that = this;
 		board = boardRef;
 		color = type;
@@ -144,7 +143,7 @@ function bgjs(id, scale, direction) {
 		
 		this.getType = function () {
 			return color;
-		}
+		};
 		
 		this.addChecker = function (type) {
 			if (color !== type) {
@@ -154,7 +153,7 @@ function bgjs(id, scale, direction) {
 				}
 			}
 			
-			this.drawChecker(checkers)
+			this.drawChecker(checkers);
 			checkers += 1;
 			return checkers;
 		};
@@ -174,12 +173,12 @@ function bgjs(id, scale, direction) {
 			ctx.fillStyle = colors.checker[color].fill;
 			
 			ctx.beginPath();
-			ctx.arc(checkerX, checkerY, border - 1 , 0, Math.PI * 2, true);
+			ctx.arc(checkerX, checkerY, border - 1, 0, Math.PI * 2, true);
 			ctx.fill();
 			ctx.stroke();
 			
 			return checkers;
-		}
+		};
 		
 		this.removeChecker = function () {
 			if (0 === checkers) {
@@ -188,12 +187,12 @@ function bgjs(id, scale, direction) {
 			checkers -= 1;
 			board.drawBoard();
 			return checkers;
-		}
+		};
 		
 		this.countChecker = function () {
 			return checkers;
-		}
-	}
+		};
+	};
 	
 	init(id, scale);
 }
