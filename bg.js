@@ -2,7 +2,7 @@
 /*global document */
 var bar = 'bar';
 function bgjs(id, scale, dir) {
-	var init, drawField, drawFields,//Private Functions
+	var init, drawField, drawFields, drawDirectionArrow,//Private Functions
 	Field, //Objects
 	that, canvas, ctx, line, border, width, height, colors, fields = [], direction = dir; //Properties
 	
@@ -62,6 +62,9 @@ function bgjs(id, scale, dir) {
 		
 		//Fields & Checkers
 		drawFields();
+		
+		
+		drawDirectionArrow();
 	};
 	
 	drawFields = function () {
@@ -110,6 +113,35 @@ function bgjs(id, scale, dir) {
 			ctx.fillText(number + 1, x + line / 2, y - (grow - 1) * line / 4 - 2);
 		}
 	};
+	
+	drawDirectionArrow = function () {
+		var x, y, size, len;
+		
+		size = border / 2;
+		len = 2 * (size / 3);
+		ctx.save();
+		
+		if (0 === direction) {
+			ctx.translate(2,2);
+		} else {
+			ctx.translate(width - 2, size * 2 + 2);
+			ctx.rotate(Math.PI);
+		}
+		
+		ctx.fillStyle = colors.checker[1].fill;
+		ctx.translate(0, 0);
+		ctx.beginPath();
+		ctx.moveTo(0, size);
+		ctx.lineTo(size, 0);
+		ctx.lineTo(size, len);
+		ctx.lineTo(2 * size, len);
+		ctx.lineTo(2 * size, 2 * size - len);
+		ctx.lineTo(size, 2 * size - len);
+		ctx.lineTo(size, 2 * size);
+		ctx.lineTo(0, size);
+		ctx.fill();
+		ctx.restore();
+	}
 	
 	this.move = function (from, to, type) {
 		from -= 1;
