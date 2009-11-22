@@ -103,7 +103,7 @@ function bgjs(id, scale, direction) {
 			type = fields[from].getType();
 			fields[from].removeChecker();
 		} else if ('undefined' === typeof(type)) {
-			type = 1;
+			type = 0;
 		}
 		
 		if ('undefined' !== typeof(fields[to])) {
