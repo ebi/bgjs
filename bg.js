@@ -2,7 +2,7 @@
 /*global document */
 var bar = 'bar';
 function bgjs(id, scale, dir) {
-	var init, drawField, drawFields, drawDirectionArrow,//Private Functions
+	var init, drawField, drawFields, drawDirectionArrow, drawDice, drawOne, drawTwo, drawFour, drawSix, //Private Functions
 	Field, //Objects
 	that, canvas, ctx, line, border, width, height, colors, fields = [], direction = dir; //Properties
 	
@@ -17,8 +17,8 @@ function bgjs(id, scale, dir) {
 			{border: 'black', fill: 'Lime', text: 'black'}
 		],
 		dice: [ //Strongly recommend you take similar color to the checkers
-			{border: 'black', fill: 'red', text: 'black'},
-			{border: 'black', fill: 'Lime', text: 'black'}
+			{border: 'black', fill: 'darkred', pipBorder: 'black', pipFill: 'red'},
+			{border: 'black', fill: 'green', pipBorder: 'black', pipFill: 'lime'}
 		],
 		text: 'white'
 	};
@@ -124,6 +124,92 @@ function bgjs(id, scale, dir) {
 		ctx.restore();
 	};
 	
+	
+	drawDice = function (number, player) {
+		var size, space, i, x, y;
+		size = line / 9;
+		space = size / 2;
+		ctx.beginPath();
+		ctx.rect(0, 0, line, line);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.save();
+		ctx.fillStyle = colors.dice[player].pipFill;
+		ctx.strokeStyle = colors.dice[player].pipBorder;
+		ctx.translate(size + 2 * space, size + 2 * space);
+		switch (number) {
+			case 1:
+				drawOne(size, space);
+				break;
+			case 2:
+				drawTwo(size, space);
+				break;
+			case 3:
+				drawOne(size, space);
+				drawTwo(size, space);
+				break;
+			case 4:
+				drawFour(size, space);
+				break;
+			case 5:
+				drawFour(size, space);
+				drawOne(size, space);
+				break;
+			case 6:
+				drawSix(size, space);
+				break;
+		}
+		ctx.restore();
+	};
+	
+	drawOne = function (size, space) {
+		ctx.beginPath();
+		ctx.arc(size * 2.5, size * 2.5, size, 0, 2 * Math.PI, true);
+		ctx.stroke();
+		ctx.fill();
+	};
+	
+	drawTwo = function (size, space) {
+		ctx.beginPath();
+		ctx.arc(0, 0, size, 0, 2 * Math.PI, true);
+		ctx.stroke();
+		ctx.fill();
+		ctx.beginPath();
+		ctx.arc(line - 3 * size - 2 * space, line - 3 * size - 2 * space, size, 0, 2 * Math.PI, true);
+		ctx.stroke();
+		ctx.fill();
+	};
+	
+	drawFour = function (size, space) {
+		ctx.save();
+		ctx.translate(size * 2.5, size * 2.5);
+		for (i = 0; i < 4 ; i += 1) {
+			ctx.rotate(Math.PI / 2);
+			ctx.beginPath();
+			ctx.arc(2 * size + space, 2 * size + space, size, 0, 2 * Math.PI, true);
+			ctx.stroke();
+			ctx.fill();
+		}
+		ctx.restore();
+	};
+	
+	drawSix = function (size, space) {
+		var y = size;
+		for (i = 0; i < 3 ;i += 1) {
+			y = 2 * i * size + i * space;
+			ctx.beginPath();
+			ctx.arc(0, y, size, 0, 2 * Math.PI, true);
+			ctx.stroke();
+			ctx.fill();
+			ctx.beginPath();
+			ctx.arc(5 * size, y, size, 0, 2 * Math.PI, true);
+			ctx.stroke();
+			ctx.fill();
+			ctx.beginPath();
+		}
+	};
+	
 	this.drawBoard = function () {
 		ctx.clearRect(0, 0, width, height);
 		
@@ -141,7 +227,23 @@ function bgjs(id, scale, dir) {
 		
 		//Fields & Checkers
 		drawFields();
+	};
+	
+	this.setDice = function (a, b, player) {
+		var dice1, dice2;
+		dice1 = (a > b) ? a : b;
+		dice2 = (a < b) ? a : b;
+		ctx.save();
 		
+		ctx.fillStyle = colors.dice[player].fill;
+		ctx.strokeStyle = colors.dice[player].border;
+		
+		ctx.translate( 2 * line + (8.5 * (1 - player)) * line, 5.5 * line);
+		drawDice(dice1, player);
+		ctx.translate(1.5 * line, 0);
+		drawDice(dice2, player);
+		ctx.restore();
+		ctx.restore();
 		
 		drawDirectionArrow();
 	};
