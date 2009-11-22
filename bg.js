@@ -95,21 +95,31 @@ function bgjs(id, scale, dir) {
 		}
 	};
 	
-	drawDirectionArrow = function () {
+	drawDirectionArrow = function (player) {
 		var x, y, size, len;
 		
 		size = border / 2;
 		len = 2 * (size / 3);
 		ctx.save();
 		
-		if (0 === direction) {
-			ctx.translate(2,2);
+		if (0 === direction ) {
+			ctx.translate(2, 0);
+			if (0 === player) {
+				ctx.translate(0, height - border - 2);
+			} else {
+				ctx.translate(0, 2);
+			}
 		} else {
-			ctx.translate(width - 2, size * 2 + 2);
+			ctx.translate(width -2, 0);
+			if (0 === player) {
+				ctx.translate(0 , height - 2);
+			} else {
+				ctx.translate(0, size * 2 + 2);
+			}
 			ctx.rotate(Math.PI);
 		}
 		
-		ctx.fillStyle = colors.checker[1].fill;
+		ctx.fillStyle = colors.checker[player].fill;
 		ctx.translate(0, 0);
 		ctx.beginPath();
 		ctx.moveTo(0, size);
@@ -245,7 +255,7 @@ function bgjs(id, scale, dir) {
 		ctx.restore();
 		ctx.restore();
 		
-		drawDirectionArrow();
+		drawDirectionArrow(player);
 	};
 	
 	this.move = function (from, to, type) {
