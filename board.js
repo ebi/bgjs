@@ -1,7 +1,7 @@
 /*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true */
 /*global document */
 var bar = 'bar';
-function bgjs(id, scale, dir) {
+function bgboard(id, scale, dir) {
 	var init, drawField, drawFields, drawDirectionArrow, drawDice, drawOne, drawTwo, drawFour, drawSix, //Private Functions
 	Field, //Objects
 	that, canvas, ctx, line, border, width, height, colors, fields = [], direction = dir; //Properties
