@@ -67,7 +67,7 @@ YUI.add('bgmatch', function (Y) {
 	//THIS IS ONLY A DUMMY
 	Y.namespace('bgmatch').game = function () {};
 	Y.namespace('bgmatch').game.prototype.getPlayer = function (number) {
-			return 0 === number ? 'ebi' : 'ana';
+			return 0 === number ? 'ana' : 'ebi';
 	};
 	
 	Y.namespace('bgmatch').game.prototype.getMoves = function () {
